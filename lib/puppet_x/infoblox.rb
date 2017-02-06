@@ -27,7 +27,7 @@ module PuppetX
     end
 
     def self.infoblox_client
-      ::Infoblox::Connection.new(username: client_config['default']['username'], password: client_config['default']['password'], host: client_config['default']['host'])
+      ::Infoblox::Connection.new(username: client_config['default']['username'], password: client_config['default']['password'], host: client_config['default']['host'], ssl_opts: {verify:true})
     end
 
     def infoblox_client
