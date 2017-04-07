@@ -1,6 +1,10 @@
 # puppet-infoblox
 Puppet provider to manage Infoblox DNS entries
 
+# Requirements
+
+- Ruby 2.0
+
 # infoblox_credentials.ini 
 
 to created in puppet conf_dir
