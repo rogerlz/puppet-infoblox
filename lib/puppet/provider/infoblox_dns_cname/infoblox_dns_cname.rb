@@ -1,18 +1,16 @@
 require_relative '../../../puppet_x/infoblox.rb'
 
-Puppet::Type.type(:infoblox_dns_cname).provide(:infoblox_dns_cname, :parent => PuppetX::Infoblox) do
+Puppet::Type.type(:infoblox_dns_cname).provide(:infoblox_dns_cname, parent: PuppetX::Infoblox) do
   confine feature: :infoblox
 
   mk_resource_methods
 
   def self.instances
-    response = Infoblox::Cname.all(infoblox_client, _max_results: 10000)
-    response.collect do |record|
-      new({
-        name: record.name,
-        canonical: record.canonical,
-        ensure: :present,
-      })
+    response = Infoblox::Cname.all(infoblox_client, _max_results: 10_000)
+    response.map do |record|
+      new(name: record.name,
+          canonical: record.canonical,
+          ensure: :present)
     end
   end
 
@@ -32,9 +30,7 @@ Puppet::Type.type(:infoblox_dns_cname).provide(:infoblox_dns_cname, :parent => P
   def canonical=(value)
     Puppet.info("Infoblox::DNS::CNAME: Updating CNAME record #{name} with canonical: #{value}")
 
-    cname_record = Infoblox::Cname.find(infoblox_client, {
-      name: name,
-    }).first
+    cname_record = Infoblox::Cname.find(infoblox_client, name: name).first
     cname_record.canonical = value
     cname_record.view = nil
     cname_record.put
@@ -56,9 +52,7 @@ Puppet::Type.type(:infoblox_dns_cname).provide(:infoblox_dns_cname, :parent => P
   def destroy
     Puppet.info("Infoblox::DNS::CNAME: Deleting CNAME record #{name}")
 
-    cname_record = Infoblox::Cname.find(infoblox_client, {
-      name: name,
-    }).first
+    cname_record = Infoblox::Cname.find(infoblox_client, name: name).first
     cname_record.delete
 
     @property_hash[:ensure] = :absent

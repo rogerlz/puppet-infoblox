@@ -6,7 +6,7 @@ Puppet::Type.newtype(:infoblox_dns_a) do
     desc 'The FQDN of DNS record.'
     isnamevar
     validate do |value|
-      fail 'The name of the record must not be blank' if value.empty?
+      raise 'The name of the record must not be blank' if value.empty?
     end
   end
 
@@ -16,15 +16,14 @@ Puppet::Type.newtype(:infoblox_dns_a) do
       value.to_i
     end
     validate do |value|
-      fail 'TTL values must be integers' unless value.to_i.to_s == value.to_s
+      raise 'TTL values must be integers' unless value.to_i.to_s == value.to_s
     end
   end
 
   newproperty(:address) do
     desc 'The IPv4 address for the record.'
     validate do |value|
-      fail 'The IPv4 of the record must not be blank' if value.empty?
+      raise 'The IPv4 of the record must not be blank' if value.empty?
     end
   end
-
 end
