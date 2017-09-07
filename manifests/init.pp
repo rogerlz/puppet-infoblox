@@ -3,7 +3,7 @@ class sstk_infoblox {
 
   package { 'infoblox':
     ensure   => present,
-    provider => 'gem',
+    provider => 'puppet_gem',
   }
 
 }
