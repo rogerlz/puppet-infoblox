@@ -3,58 +3,56 @@ require_relative '../../../puppet_x/infoblox.rb'
 Puppet::Type.type(:infoblox_dns_host).provide(:infoblox_dns_host, parent: PuppetX::Infoblox) do
   confine feature: :infoblox
 
-  mk_resource_methods
-
-  def self.instances
-    $response = Infoblox::Host.all(infoblox_client, _max_results: 9000)
-    $response.map do |record|
-      new(name: record.name,
-          address: record.ipv4addr,
-          ensure: :present)
-    end
-  end
-
-  def self.prefetch(resources)
-    instances.each do |prov|
-      if resource = resources[prov.name]
-        resource.provider = prov
-      end
-    end
+  def host_record_lookup
+    host_record_lookup = Infoblox::Host.find(infoblox_client, _max_results: 1000, name: resource[:name]).first
   end
 
   def exists?
     Puppet.info("Infoblox::DNS::Host: Checking if Host record #{name} exists")
-    @property_hash[:ensure] == :present
+    host_record_lookup
+  end
+
+  def address
+    Puppet.info("Infoblox::DNS:Host: Checking Host record #{name} for address: resource[:address]")
+
+    host_record = Infoblox::Host.find(infoblox_client, name: resource[:name]).first
+    host_array = []
+    host_record.ipv4addrs.each do |ipaddr|
+      host_array << ipaddr.ipv4addr
+    end
+    if host_array.sort ==resource[:address].sort
+     resource[:address]
+    end
   end
 
   def address=(value)
-    Puppet.info("Infoblox::DNS::Host: Updating Host record #{name} with address: #{value}")
+    Puppet.info("Infoblox::DNS::Host: Recreating Host record #{name} with address(es): #{value}")
 
     host_record = Infoblox::Host.find(infoblox_client, name: name).first
-    host_record.ipv4addr = value
-    host_record.view = nil
-    host_record.put
+    host_record.delete
+    create
   end
 
   def create
     Puppet.info("Infoblox::DNS::Host: Creating Host record #{name} with #{resource[:address]}")
-
+    address_array = []
+    resource[:address].each do |ipaddr|
+      address_array << {:ipv4addr => ipaddr}
+    end
     host_record = Infoblox::Host.new(
       connection: infoblox_client,
       name: name,
-      ipv4addr: @resource[:address],
+      ipv4addrs: address_array,
     )
     host_record.post
 
-    @property_hash[:ensure] = :present
     end
 
   def destroy
-    Puppet.info("Infoblox::DNS::Host: Deleting A record #{name}")
+    Puppet.info("Infoblox::DNS::Host: Deleting Host record #{name}")
 
-    host_record = Infoblox::Host.find(infoblox_client, name: name).first
+    host_record = Infoblox::Host.find(infoblox_client, name: resource[:name]).first
     host_record.delete
 
-    @property_hash[:ensure] = :absent
     end
 end

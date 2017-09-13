@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'sstk_infoblox' do
+describe 'infoblox' do
   context 'compiles?' do
     it { is_expected.to compile }
   end

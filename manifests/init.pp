@@ -1,5 +1,5 @@
 # Installs infoblox gem
-class sstk_infoblox {
+class infoblox {
 
   package { 'infoblox':
     ensure   => present,
