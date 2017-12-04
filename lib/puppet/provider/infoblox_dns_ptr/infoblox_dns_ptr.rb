@@ -6,8 +6,8 @@ Puppet::Type.type(:infoblox_dns_a).provide(:infoblox_dns_a, parent: PuppetX::Inf
   mk_resource_methods
 
   def self.instances
-    $response = Infoblox::Ptr.all(infoblox_client, _max_results: 9000)
-    $response.map do |record|
+    @response = Infoblox::Ptr.all(infoblox_client, _max_results: 9000)
+    @response.map do |record|
       new(name: record.name,
           ptrdname: record.ptrdname,
           ensure: :present)
@@ -16,7 +16,7 @@ Puppet::Type.type(:infoblox_dns_a).provide(:infoblox_dns_a, parent: PuppetX::Inf
 
   def self.prefetch(resources)
     instances.each do |prov|
-      if resource = resources[prov.name]
+      if resource == resources[prov.name]
         resource.provider = prov
       end
     end
@@ -57,7 +57,7 @@ Puppet::Type.type(:infoblox_dns_a).provide(:infoblox_dns_a, parent: PuppetX::Inf
     ptr_record.post
 
     @property_hash[:ensure] = :present
-    end
+  end
 
   def destroy
     Puppet.info("Infoblox::DNS::PTR: Deleting A record #{name}")
@@ -66,5 +66,5 @@ Puppet::Type.type(:infoblox_dns_a).provide(:infoblox_dns_a, parent: PuppetX::Inf
     ptr_record.delete
 
     @property_hash[:ensure] = :absent
-    end
+  end
 end

@@ -4,7 +4,7 @@ Puppet::Type.type(:infoblox_dns_host).provide(:infoblox_dns_host, parent: Puppet
   confine feature: :infoblox
 
   def host_record_lookup
-    host_record_lookup = Infoblox::Host.find(infoblox_client, _max_results: 1000, name: resource[:name]).first
+    Infoblox::Host.find(infoblox_client, _max_results: 1000, name: resource[:name]).first
   end
 
   def exists?
@@ -20,9 +20,8 @@ Puppet::Type.type(:infoblox_dns_host).provide(:infoblox_dns_host, parent: Puppet
     host_record.ipv4addrs.each do |ipaddr|
       host_array << ipaddr.ipv4addr
     end
-    if host_array.sort ==resource[:address].sort
-     resource[:address]
-    end
+    return unless host_array.sort == resource[:address].sort
+    resource[:address]
   end
 
   def address=(value)
@@ -37,7 +36,7 @@ Puppet::Type.type(:infoblox_dns_host).provide(:infoblox_dns_host, parent: Puppet
     Puppet.info("Infoblox::DNS::Host: Creating Host record #{name} with #{resource[:address]}")
     address_array = []
     resource[:address].each do |ipaddr|
-      address_array << {:ipv4addr => ipaddr}
+      address_array << { ipv4addr: ipaddr }
     end
     host_record = Infoblox::Host.new(
       connection: infoblox_client,
@@ -45,14 +44,12 @@ Puppet::Type.type(:infoblox_dns_host).provide(:infoblox_dns_host, parent: Puppet
       ipv4addrs: address_array,
     )
     host_record.post
-
-    end
+  end
 
   def destroy
     Puppet.info("Infoblox::DNS::Host: Deleting Host record #{name}")
 
     host_record = Infoblox::Host.find(infoblox_client, name: resource[:name]).first
     host_record.delete
-
-    end
+  end
 end
