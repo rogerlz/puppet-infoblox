@@ -1,5 +1,5 @@
-Puppet::Type.newtype(:infoblox_dns_a) do
-  @doc = 'Type representing an Infoblox DNS A Record.'
+Puppet::Type.newtype(:infoblox_dns_ptr) do
+  @doc = 'Type representing an Infoblox DNS PTR Record.'
 
   ensurable
   newparam(:fqdn) do
@@ -10,13 +10,13 @@ Puppet::Type.newtype(:infoblox_dns_a) do
     end
   end
 
-  newproperty(:ttl) do
-    desc 'The time to live for the record.'
+  newproperty(:ptrdname) do
+    desc 'The domain name of the DNS PTR record.'
     munge do |value|
-      value.to_i
+      value
     end
     validate do |value|
-      raise 'TTL values must be integers' unless value.to_i.to_s == value.to_s
+      raise 'The name of the record must not be blank' if value.empty?
     end
   end
 

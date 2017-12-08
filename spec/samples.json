@@ -1,0 +1,27 @@
+GET:
+[
+    {
+        "_ref": "record:host/ZG5zLmhvc3QkLl9kZWZhdWx0Lm5ldC5zaHV0dGVyY29ycC5teWxpdHRsZQ:mylittle.shuttercorp.net/Internal", 
+        "ipv4addrs": [
+            {
+                "_ref": "record:host_ipv4addr/ZG5zLmhvc3RfYWRkcmVzcyQuX2RlZmF1bHQubmV0LnNodXR0ZXJjb3JwLm15bGl0dGxlLjE2OS42LjExLjEwLg:169.6.11.10/mylittle.shuttercorp.net/Internal", 
+                "configure_for_dhcp": false, 
+                "host": "mylittle.shuttercorp.net", 
+                "ipv4addr": "169.6.11.10"
+            }, 
+            {
+                "_ref": "record:host_ipv4addr/ZG5zLmhvc3RfYWRkcmVzcyQuX2RlZmF1bHQubmV0LnNodXR0ZXJjb3JwLm15bGl0dGxlLjE2OS42LjExLjExLg:169.6.11.11/mylittle.shuttercorp.net/Internal", 
+                "configure_for_dhcp": false, 
+                "host": "mylittle.shuttercorp.net", 
+                "ipv4addr": "169.6.11.11"
+            }
+        ], 
+        "name": "mylittle.shuttercorp.net", 
+        "view": "Internal"
+    }
+]
+PUT:
+{:ipv4addrs=>
+  [{:ipv4addr=>"169.6.11.11"},
+   {:ipv4addr=>"169.6.11.10"}],
+ :name=>"mylittle.shuttercorp.net"}
