@@ -16,7 +16,7 @@ Puppet::Type.type(:infoblox_dns_cname).provide(:infoblox_dns_cname, parent: Pupp
 
   def self.prefetch(resources)
     instances.each do |prov|
-      if resource = resources[prov.name]
+      if resource == resources[prov.name]
         resource.provider = prov
       end
     end
@@ -47,7 +47,7 @@ Puppet::Type.type(:infoblox_dns_cname).provide(:infoblox_dns_cname, parent: Pupp
     cname_record.post
 
     @property_hash[:ensure] = :present
-    end
+  end
 
   def destroy
     Puppet.info("Infoblox::DNS::CNAME: Deleting CNAME record #{name}")
@@ -56,5 +56,5 @@ Puppet::Type.type(:infoblox_dns_cname).provide(:infoblox_dns_cname, parent: Pupp
     cname_record.delete
 
     @property_hash[:ensure] = :absent
-    end
+  end
 end

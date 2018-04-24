@@ -1,6 +1,7 @@
 require_relative '../../../puppet_x/infoblox.rb'
 require 'infoblox'
 
+# Sets up the API calls for Infoblox using the infoblox ruby gem.
 module Puppet::Parser::Functions
   newfunction(:infoblox_function, type: :rvalue) do |args|
     func_name = __method__.to_s.sub!('real_function_', '')

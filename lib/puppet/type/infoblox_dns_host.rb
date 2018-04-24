@@ -10,7 +10,7 @@ Puppet::Type.newtype(:infoblox_dns_host) do
     end
   end
 
-  newproperty(:address, :array_matching => :all) do
+  newproperty(:address, array_matching: :all) do
     desc 'The IPv4 address for the record.'
     validate do |value|
       raise 'The IPv4 of the record must not be blank' if value.empty?

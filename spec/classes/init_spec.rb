@@ -6,6 +6,6 @@ describe 'infoblox' do
   end
 
   context do
-    it { is_expected.to contain_package('infoblox').only_with('ensure' => 'present', 'provider' => 'puppet_gem') }
+    it { is_expected.to contain_package('infoblox').with('ensure' => 'present', 'provider' => 'puppet_gem') }
   end
 end
